@@ -1,44 +1,29 @@
 package com.blz.moodanalyzer;
 
-import static org.junit.Assert.assertEquals;
+import com.bl.moodanalyzer.MoodAnalysisException.ExceptionType;
 
-import org.junit.Test;
-
-public class TestMoodAnalyzer {
-
-	@Test
-	public void givenMessage_whenSad_shouldReturnSad() throws MoodAnalysisException {
-		MoodAnalyzer moodAnalyzer = new MoodAnalyzer("This is a sad message");
-		String mood = moodAnalyzer.analyzeMood();
-		assertEquals("SAD", mood);
-	}
+public class MoodAnalyzer {	
+	private String message;
 	
-	@Test
-	public void givenMessage_whenNotSad_shouldReturnHappy() throws MoodAnalysisException {
-		MoodAnalyzer moodAnalyzer = new MoodAnalyzer("This is a happy message");
-		String mood = moodAnalyzer.analyzeMood();
-		assertEquals("HAPPY", mood);
+	public MoodAnalyzer() {
 	}
-	
-	@Test
-	public void givenMessage_whenNull_shouldThrowException() throws MoodAnalysisException {
-		MoodAnalyzer moodAnalyzer = new MoodAnalyzer(null);
-		String mood;
+
+	public MoodAnalyzer(String message) {
+		this.message = message;
+	}
+
+	public String analyzeMood() throws MoodAnalysisException {
 		try {
-			mood = moodAnalyzer.analyzeMood();
-		} catch (MoodAnalysisException e) {
-			assertEquals(MoodAnalysisException.ExceptionType.ENTERED_NULL, e.type);
+			if(message.length() == 0) {
+				throw new MoodAnalysisException(ExceptionType.ENTERED_EMPTY, "You entered an Invalid input!\\nPlease enter a non-empty input for mood.");
+			}
+				
+			if(message.contains("sad"))
+				return "SAD";
+			else
+				return "HAPPY";
+		} catch (NullPointerException e) {
+			throw new MoodAnalysisException(ExceptionType.ENTERED_NULL, "You entered an Invalid input!\\nPlease enter a non-NULL input for mood.");
 		}
-	}
-	
-	@Test
-	public void givenMessage_whenEmpty_shouldThrowException() {
-		MoodAnalyzer moodAnalyzer = new MoodAnalyzer(" ");
-		String mood = null;
-		try {
-			mood = moodAnalyzer.analyzeMood();
-		} catch (MoodAnalysisException e) {
-			assertEquals(MoodAnalysisException.ExceptionType.ENTERED_EMPTY, e.type);
-		}	
-	}
+	}	
 }
